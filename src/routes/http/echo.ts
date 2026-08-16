@@ -32,14 +32,14 @@ async function anythingHandler(c: Context) {
   })
 }
 
-// Accepts any method, any sub-path — echoes back what was sent. Useful for
+// Accepts any method and any sub-path, echoing back what was sent. Useful for
 // testing that an HTTP client builds requests correctly, independent of
 // what a real endpoint does with them.
 httpEcho.all('/http/anything', anythingHandler)
 httpEcho.all('/http/anything/*', anythingHandler)
 
-// Every query param becomes a real response header (and is echoed in the
-// JSON body) — for testing that a client reads arbitrary response headers.
+// Every query param becomes a real response header, and is also echoed in
+// the JSON body. Useful for testing that a client reads arbitrary response headers.
 httpEcho.get('/http/response-headers', (c) => {
   const params: Record<string, string> = {}
   new URL(c.req.url).searchParams.forEach((v, k) => {

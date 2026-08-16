@@ -8,8 +8,8 @@ const SIZE_KB_MAX = 5120 // 5 MB, to keep this within a Worker's memory/CPU budg
 const SIZE_KB_DEFAULT = 10
 
 const FILE_TYPES = {
-  txt: { ext: 'txt', contentType: 'text/plain' },
-  csv: { ext: 'csv', contentType: 'text/csv' },
+  txt: { ext: 'txt', contentType: 'text/plain; charset=utf-8' },
+  csv: { ext: 'csv', contentType: 'text/csv; charset=utf-8' },
   json: { ext: 'json', contentType: 'application/json' },
   bin: { ext: 'bin', contentType: 'application/octet-stream' },
 } as const
@@ -42,14 +42,14 @@ generatorFiles.get('/generator/files', (c) => {
   return c.html(
     <Layout
       title="File Generator"
-      description="Generate a dummy file of a given type and approximate size — for testing upload size limits and file-type validation."
+      description="Generate a dummy file of a given type and approximate size, for testing upload size limits and file-type validation."
     >
       <p class="crumb">
         <a href="/generator">&laquo; Generators</a>
       </p>
       <h1>File Generator</h1>
       <p class="intro">
-        Downloads a real file of the requested type at (approximately) the requested size — useful for testing an
+        Downloads a real file of the requested type at (approximately) the requested size. Useful for testing an
         upload form's size limits and file-type validation.
       </p>
 

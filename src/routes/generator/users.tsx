@@ -30,7 +30,7 @@ generatorUsers.get('/generator/users/api', (c) => {
   })
 
   if (format === 'csv') {
-    c.header('Content-Type', 'text/csv')
+    c.header('Content-Type', 'text/csv; charset=utf-8')
     c.header('Content-Disposition', 'attachment; filename="generated-users.csv"')
     return c.body(toCsv(users))
   }
@@ -68,7 +68,7 @@ generatorUsers.get('/generator/users', (c) => {
   return c.html(
     <Layout
       title="User Generator"
-      description="Generate bulk fake user identities — name, email, phone, address, and avatar. Fresh values every time, instant CSV/JSON download, no signup or email required."
+      description="Generate bulk fake user identities (name, email, phone, address, and avatar). Fresh values every time, instant CSV/JSON download, no signup or email required."
     >
       <p class="crumb">
         <a href="/generator">&laquo; Generators</a>
@@ -76,7 +76,7 @@ generatorUsers.get('/generator/users', (c) => {
       <h1>User Generator</h1>
       <p class="intro">
         Fresh, random fake identities for testing signup forms, seeding a demo, or populating a UI mockup. Unlike
-        the Mock Data APIs, this gives you new values on every click — nothing here is deterministic.
+        the Mock Data APIs, this gives you new values on every click: nothing here is deterministic.
       </p>
 
       <form class="test-form" id="gen-form">

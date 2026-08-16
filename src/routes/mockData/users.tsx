@@ -47,7 +47,7 @@ mockUsersApi.post('/mock-data/users', async (c) => {
   const body = await c.req.json().catch(() => ({}))
   const nextId = MOCK_USERS.length + 1
   return c.json(
-    { id: nextId, ...body, note: 'Not persisted — this mock API does not store data between requests.' },
+    { id: nextId, ...body, note: 'Not persisted. This mock API does not store data between requests.' },
     201
   )
 })
@@ -57,14 +57,14 @@ mockUsersApi.on(['PUT', 'PATCH'], '/mock-data/users/:id{[0-9]+}', async (c) => {
   const user = findMockUser(id)
   if (!user) return c.json({ error: 'User not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...serialize(user, requestOrigin(c)), ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...serialize(user, requestOrigin(c)), ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 mockUsersApi.delete('/mock-data/users/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   const user = findMockUser(id)
   if (!user) return c.json({ error: 'User not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 const AVATAR_COLORS = ['#2563eb', '#dc2626', '#059669', '#d97706', '#7c3aed', '#db2777', '#0891b2', '#65a30d']
@@ -95,7 +95,7 @@ mockUsersApi.get('/mock-data/users/docs', (c) => {
   return c.html(
     <Layout
       title="Users API reference"
-      description="A fake CRUD REST API for user records — list, fetch, create, update, and delete. Nothing is persisted between requests."
+      description="A fake CRUD REST API for user records. List, fetch, create, update, and delete are all supported, but nothing is persisted between requests."
     >
       <p class="crumb">
         <a href="/mock-data">&laquo; Mock Data</a>
@@ -103,7 +103,7 @@ mockUsersApi.get('/mock-data/users/docs', (c) => {
       <h1>Users API</h1>
       <p class="intro">
         A small fake REST API for user records, in the spirit of JSONPlaceholder. Every <code>GET</code> response is
-        deterministic — same data every time. <code>POST</code>/<code>PUT</code>/<code>PATCH</code>/
+        deterministic and returns the same data every time. <code>POST</code>/<code>PUT</code>/<code>PATCH</code>/
         <code>DELETE</code> accept any body and echo a plausible response back, but nothing is actually stored.
       </p>
 
@@ -145,7 +145,7 @@ mockUsersApi.get('/mock-data/users/docs', (c) => {
             <td>
               <code>/mock-data/users</code>
             </td>
-            <td>Fake create — echoes the submitted JSON body back with a generated id. Not persisted.</td>
+            <td>Fake create. Echoes the submitted JSON body back with a generated id. Not persisted.</td>
           </tr>
           <tr>
             <td>
@@ -154,7 +154,7 @@ mockUsersApi.get('/mock-data/users/docs', (c) => {
             <td>
               <code>/mock-data/users/:id</code>
             </td>
-            <td>Fake update — merges the submitted body onto the existing user. Not persisted.</td>
+            <td>Fake update, merging the submitted body onto the existing user. Not persisted.</td>
           </tr>
           <tr>
             <td>
@@ -163,7 +163,7 @@ mockUsersApi.get('/mock-data/users/docs', (c) => {
             <td>
               <code>/mock-data/users/:id</code>
             </td>
-            <td>Fake delete — confirms deletion. Not persisted.</td>
+            <td>Fake delete: confirms deletion. Not persisted.</td>
           </tr>
           <tr>
             <td>

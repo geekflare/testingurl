@@ -69,7 +69,7 @@ tables.get('/scraping/tables/sortable', (c) => {
     <Layout title="Sortable table">
       <h1>Sortable table</h1>
       <p>
-        Sorted server-side via <code>?sort=</code> and <code>?dir=</code> query params — click a column header.
+        Sorted server-side via <code>?sort=</code> and <code>?dir=</code> query params. Click a column header.
         Currently sorted by <code>{sort}</code> (<code>{dir}</code>).
       </p>
       <table>
@@ -103,7 +103,7 @@ tables.get('/scraping/tables/nested', (c) => {
     <Layout title="Nested/merged cells">
       <h1>Nested/merged cells</h1>
       <p>
-        Products grouped by category using <code>rowspan</code> on the first cell of each group — a common
+        Products grouped by category using <code>rowspan</code> on the first cell of each group, a common
         real-world markup pattern that trips up naive row-by-row parsing.
       </p>
       <table>

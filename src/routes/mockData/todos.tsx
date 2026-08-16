@@ -45,20 +45,20 @@ todos.on(['PUT', 'PATCH'], '/mock-data/todos/:id{[0-9]+}', async (c) => {
   const todo = findTodo(parseInt(c.req.param('id'), 10))
   if (!todo) return c.json({ error: 'Todo not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...todo, ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...todo, ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 todos.delete('/mock-data/todos/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   if (!findTodo(id)) return c.json({ error: 'Todo not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 todos.get('/mock-data/todos/docs', (c) => {
   return c.html(
     <Layout
       title="Todos API reference"
-      description="A fake CRUD REST API for to-do items — list, fetch, create, update, and delete. Nothing is persisted between requests."
+      description="A fake CRUD REST API for to-do items, supporting list, fetch, create, update, and delete. Nothing is persisted between requests."
     >
       <p class="crumb">
         <a href="/mock-data">&laquo; Mock Data</a>
@@ -66,7 +66,7 @@ todos.get('/mock-data/todos/docs', (c) => {
       <h1>Todos API</h1>
       <p class="intro">
         {MOCK_TODOS.length} to-do items, each owned by a user (<code>userId</code>) and with a deterministic{' '}
-        <code>completed</code> flag — every third item (by id) is marked done.
+        <code>completed</code> flag: every third item (by id) is marked done.
       </p>
 
       <h2>Endpoints</h2>

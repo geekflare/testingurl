@@ -27,13 +27,24 @@ pagination.get('/scraping/pagination/page/:page{[0-9]+}', (c) => {
   if (page > totalPages) return c.notFound()
   const start = (page - 1) * PAGE_SIZE
   const items = PRODUCTS.slice(start, start + PAGE_SIZE)
+  const pageUrl = (n: number) => `https://testingurl.dev/scraping/pagination/page/${n}`
 
   return c.html(
-    <Layout title={`Pagination · page ${page}`}>
+    <Layout
+      title={`Pagination · page ${page}`}
+      head={
+        <>
+          {page > 1 && <link rel="prev" href={pageUrl(page - 1)} />}
+          {page < totalPages && <link rel="next" href={pageUrl(page + 1)} />}
+        </>
+      }
+    >
       <h1>Numbered pagination</h1>
       <p>
         Page <code>{page}</code> of <code>{totalPages}</code>. Each page lists {PAGE_SIZE} products in a stable
-        order.
+        order. This page's <code>&lt;head&gt;</code> also carries <code>&lt;link rel="prev"/"next"&gt;</code>{' '}
+        tags pointing at its neighbors, view source to see them (page 1 has no <code>rel="prev"</code>, and the
+        last page has no <code>rel="next"</code>).
       </p>
       <ProductGrid items={items} />
       <nav class="pagination">

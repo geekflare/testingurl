@@ -2,8 +2,8 @@ import { Hono } from 'hono'
 
 export const httpUserAgentCheck = new Hono()
 
-// Known non-browser client signatures — a deliberately simple, documented
-// rule (not a real anti-bot heuristic) so the check stays predictable:
+// Known non-browser client signatures. This is a deliberately simple,
+// documented rule (not a real anti-bot heuristic) so the check stays predictable:
 // spoof a real browser User-Agent to get a 200 instead of a 403.
 const NON_BROWSER_TOKENS = [
   'curl', 'wget', 'python-requests', 'python-urllib', 'scrapy', 'go-http-client', 'okhttp',

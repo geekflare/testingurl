@@ -24,7 +24,7 @@ const EMAIL_DOMAINS = ['example.com', 'mail.com', 'testmail.dev', 'inbox.test']
 
 const USERS_COUNT = 50
 
-// Deterministic, seed-free "fake" user directory — same shape and same
+// Deterministic, seed-free "fake" user directory: same shape and same
 // values on every request, so responses are safe to assert on in tests.
 function buildUsers(): MockUser[] {
   const users: MockUser[] = []

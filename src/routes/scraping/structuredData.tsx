@@ -101,7 +101,7 @@ structuredData.get('/scraping/structured-data', (c) => {
   return c.html(
     <Layout
       title="Structured data & metadata"
-      description="Product, collection, review, and FAQ pages in the formats real sites use — JSON-LD, Microdata, Open Graph, and JS dataLayers — for testing structured-data extraction."
+      description="Product, collection, review, and FAQ pages built in the formats real sites use (JSON-LD, Microdata, Open Graph, and JS dataLayers), for testing structured-data extraction."
     >
       <p class="crumb">
         <a href="/scraping">&laquo; Web Scraping</a>
@@ -109,8 +109,8 @@ structuredData.get('/scraping/structured-data', (c) => {
       <h1>Structured data &amp; metadata</h1>
       <p class="intro">
         The same demo product (<a href={productUrl(DEMO_PRODUCT)}>{DEMO_PRODUCT.name}</a>) exposed through one
-        machine-readable format at a time, plus a page with all of them at once — useful for testing that an
-        extractor reads every format correctly, and that values agree across formats.
+        machine-readable format at a time, plus a page with all of them at once. Useful for testing that an
+        extractor reads every format correctly and that values agree across formats.
       </p>
       <ul class="index-list">
         <li>
@@ -129,7 +129,7 @@ structuredData.get('/scraping/structured-data', (c) => {
         </li>
         <li>
           <span class="badge">medium</span>{' '}
-          <a href="/scraping/structured-data/product-datalayer">Product — dataLayer</a> — no markup at all; the data
+          <a href="/scraping/structured-data/product-datalayer">Product — dataLayer</a> — no markup at all. The data
           lives only in a GA4/GTM-style <code>window.dataLayer</code> push, so extraction requires running JS.
         </li>
         <li>
@@ -158,7 +158,7 @@ structuredData.get('/scraping/structured-data/product-json-ld', (c) => {
   return c.html(
     <Layout
       title="Product — JSON-LD"
-      description="A product page exposing data only via a schema.org/Product JSON-LD script — no Microdata, no Open Graph, no dataLayer."
+      description="A product page exposing data only via a schema.org/Product JSON-LD script: no Microdata, no Open Graph, no dataLayer."
     >
       <Crumb />
       <span class="badge">JSON-LD only</span>
@@ -172,7 +172,7 @@ structuredData.get('/scraping/structured-data/product-microdata', (c) => {
   return c.html(
     <Layout
       title="Product — Microdata"
-      description="The same product exposed only via schema.org Microdata (itemscope/itemprop attributes) — no JSON-LD, no Open Graph, no dataLayer."
+      description="The same product exposed only via schema.org Microdata (itemscope/itemprop attributes), with no JSON-LD, Open Graph, or dataLayer."
     >
       <Crumb />
       <span class="badge">Microdata only</span>
@@ -185,15 +185,15 @@ structuredData.get('/scraping/structured-data/product-open-graph', (c) => {
   return c.html(
     <Layout
       title="Product — Open Graph"
-      description="The same product exposed only via Open Graph and product: meta tags in <head> — no JSON-LD, no Microdata, no dataLayer."
+      description="The same product exposed only via Open Graph and product: meta tags in <head>. No JSON-LD, no Microdata, no dataLayer."
       head={<OgHead />}
     >
       <Crumb />
       <span class="badge">Open Graph only</span>
       <PlainProductFacts />
       <p class="intro">
-        Check the response <code>&lt;head&gt;</code> for <code>og:*</code> and <code>product:*</code> meta tags —
-        there's no other machine-readable data on this page.
+        Check the response <code>&lt;head&gt;</code> for <code>og:*</code> and <code>product:*</code> meta tags.
+        There's no other machine-readable data on this page.
       </p>
     </Layout>
   )
@@ -203,13 +203,13 @@ structuredData.get('/scraping/structured-data/product-datalayer', (c) => {
   return c.html(
     <Layout
       title="Product — dataLayer"
-      description="The same product pushed into window.dataLayer as a GA4/GTM ecommerce event — no schema.org markup at all, so extraction requires executing JS."
+      description="The same product pushed into window.dataLayer as a GA4/GTM ecommerce event. There's no schema.org markup at all, so extraction requires executing JS."
     >
       <Crumb />
       <span class="badge">dataLayer only</span>
       <PlainProductFacts />
       <p class="intro">
-        No JSON-LD, Microdata, or Open Graph on this page — the structured data exists only as a{' '}
+        No JSON-LD, Microdata, or Open Graph on this page: the structured data exists only as a{' '}
         <code>window.dataLayer.push(...)</code> call. Run <code>window.dataLayer</code> in a JS-capable client to
         read it.
       </p>
@@ -222,7 +222,7 @@ structuredData.get('/scraping/structured-data/product-combined', (c) => {
   return c.html(
     <Layout
       title="Product — combined"
-      description="The same product with JSON-LD, Microdata, Open Graph, and a dataLayer push all present at once — a realistic messy real-world page."
+      description="The same product with JSON-LD, Microdata, Open Graph, and a dataLayer push all present at once, the way a real page accumulates markup over time."
       head={<OgHead />}
     >
       <Crumb />
@@ -246,7 +246,7 @@ structuredData.get('/scraping/structured-data/collection', (c) => {
       <h1>{DEMO_CATEGORY.label}</h1>
       <p class="intro">
         Exposed as a schema.org <code>CollectionPage</code> whose <code>mainEntity</code> is an{' '}
-        <code>ItemList</code> — see the JSON-LD in the page source.
+        <code>ItemList</code>. See the JSON-LD in the page source.
       </p>
       <ol>
         {products.map((p) => (
@@ -285,7 +285,7 @@ structuredData.get('/scraping/structured-data/reviews', (c) => {
 const FAQ_ITEMS = [
   {
     question: 'Is it OK to scrape this site?',
-    answer: 'Yes — that is the entire point. robots.txt allows every path, and nothing here is rate-limited except the one endpoint built to demonstrate rate limiting.',
+    answer: 'Yes, that is the entire point. robots.txt allows every path, and nothing here is rate-limited except the one endpoint built to demonstrate rate limiting.',
   },
   {
     question: 'Does the data change between requests?',
@@ -297,7 +297,7 @@ const FAQ_ITEMS = [
   },
   {
     question: 'Where do I report a bug or request a new test page?',
-    answer: 'Reach out via the contact page — email or phone both work.',
+    answer: 'Reach out via the contact page; email or phone both work.',
   },
 ]
 

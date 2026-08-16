@@ -49,13 +49,13 @@ postsAndComments.on(['PUT', 'PATCH'], '/mock-data/posts/:id{[0-9]+}', async (c) 
   const post = findPost(parseInt(c.req.param('id'), 10))
   if (!post) return c.json({ error: 'Post not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...post, ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...post, ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 postsAndComments.delete('/mock-data/posts/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   if (!findPost(id)) return c.json({ error: 'Post not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 // --- Comments ------------------------------------------------------------
@@ -82,13 +82,13 @@ postsAndComments.on(['PUT', 'PATCH'], '/mock-data/comments/:id{[0-9]+}', async (
   const comment = findComment(parseInt(c.req.param('id'), 10))
   if (!comment) return c.json({ error: 'Comment not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...comment, ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...comment, ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 postsAndComments.delete('/mock-data/comments/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   if (!findComment(id)) return c.json({ error: 'Comment not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 // --- Docs ------------------------------------------------------------------
@@ -97,7 +97,7 @@ postsAndComments.get('/mock-data/posts/docs', (c) => {
   return c.html(
     <Layout
       title="Posts & Comments API reference"
-      description="A fake CRUD REST API for posts and their nested comments — list, fetch, create, update, and delete. Nothing is persisted between requests."
+      description="A fake CRUD REST API for posts and their nested comments. Supports list, fetch, create, update, and delete; nothing is persisted between requests."
     >
       <p class="crumb">
         <a href="/mock-data">&laquo; Mock Data</a>
@@ -105,7 +105,7 @@ postsAndComments.get('/mock-data/posts/docs', (c) => {
       <h1>Posts &amp; Comments API</h1>
       <p class="intro">
         {MOCK_POSTS.length} posts, each owned by a user (<code>userId</code>), with {MOCK_COMMENTS.length} comments
-        total spread across them — comments reference their post via <code>postId</code>, independent of the Users
+        in total spread across them. Comments reference their post via <code>postId</code>, independent of the Users
         resource (like real blog comments, not necessarily from a registered user).
       </p>
 

@@ -53,7 +53,7 @@ links.get('/scraping/links/broken', (c) => {
   return c.html(
     <Layout title="Broken links">
       <h1>Broken links</h1>
-      <p>A mix of valid links and intentional 404s — good for testing link-checker/crawler error handling.</p>
+      <p>A mix of valid links and intentional 404s, good for testing link-checker/crawler error handling.</p>
       <ul>
         <li>
           <a href="/scraping/pagination/page/1">Valid: pagination page 1</a>

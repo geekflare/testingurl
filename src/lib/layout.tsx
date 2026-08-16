@@ -1,5 +1,14 @@
 import type { FC, PropsWithChildren } from 'hono/jsx'
-import { MANIFEST } from './manifest'
+import { MANIFEST, SEARCH_INDEX } from './manifest'
+
+const SEARCH_INDEX_JSON = JSON.stringify(SEARCH_INDEX)
+
+const GeekflareLogo: FC<{ height: number }> = ({ height }) => (
+  <picture>
+    <source srcset="https://cdn.geekflare.com/general/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <img src="https://cdn.geekflare.com/general/logo.svg" alt="Geekflare" height={height} />
+  </picture>
+)
 
 export const Layout: FC<PropsWithChildren<{ title: string; description?: string; head?: any }>> = ({
   title,
@@ -15,6 +24,7 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title} · TestingURL.dev</title>
         {description && <meta name="description" content={description} />}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
         <link
@@ -24,6 +34,8 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
         <style dangerouslySetInnerHTML={{ __html: STYLES }} />
         {head}
         <script dangerouslySetInnerHTML={{ __html: CODE_BLOCK_SCRIPT }} />
+        <script id="search-index-data" type="application/json" dangerouslySetInnerHTML={{ __html: SEARCH_INDEX_JSON }} />
+        <script dangerouslySetInnerHTML={{ __html: SEARCH_SCRIPT }} />
       </head>
       <body>
         <header class="site-header">
@@ -34,11 +46,22 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
                   TestingURL<span class="dot">.dev</span>
                 </span>
               </a>
-              <a href="https://geekflare.com" class="by-badge" rel="noopener noreferrer" target="_blank">
-                by <strong>Geekflare</strong>
-              </a>
+              <div class="header-actions">
+                <div class="site-search">
+                  <input
+                    type="search"
+                    id="site-search-input"
+                    placeholder="Search pages…"
+                    aria-label="Search pages by name or description"
+                    autocomplete="off"
+                  />
+                  <div id="site-search-results" class="search-results" role="listbox" hidden></div>
+                </div>
+                <a href="https://geekflare.com" class="by-badge" rel="noopener noreferrer" target="_blank">
+                  by <GeekflareLogo height={19} />
+                </a>
+              </div>
             </div>
-            <p class="tagline">Developer &amp; Web Scraping Sandbox</p>
             <nav class="site-nav">
               <a href="/">All pages</a>
               {MANIFEST.map((group) => (
@@ -85,7 +108,7 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
 
 // Delegated on `document` so it works for every CodeBlock on the page,
 // including ones whose content is populated later by other scripts (the
-// generator preview panels) — it just reads whatever text is there when
+// generator preview panels). It just reads whatever text is there when
 // the button is clicked.
 const CODE_BLOCK_SCRIPT = `
   function markCopied(btn) {
@@ -137,8 +160,66 @@ const CODE_BLOCK_SCRIPT = `
   });
 `
 
+// Reads the embedded search-index JSON once, then filters client-side on
+// every keystroke. The index is small (one entry per test page), so no
+// server round-trip is worth it.
+const SEARCH_SCRIPT = `
+  document.addEventListener('DOMContentLoaded', function () {
+    var dataEl = document.getElementById('search-index-data');
+    var input = document.getElementById('site-search-input');
+    var results = document.getElementById('site-search-results');
+    if (!dataEl || !input || !results) return;
+    var index = [];
+    try { index = JSON.parse(dataEl.textContent); } catch (e) {}
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function render(items, query) {
+      if (items.length === 0) {
+        results.innerHTML = '<div class="search-empty">No pages match "' + escapeHtml(query) + '".</div>';
+      } else {
+        results.innerHTML = items.slice(0, 8).map(function (item) {
+          return '<a href="' + item.path + '" role="option">' +
+            '<span class="sr-title">' + escapeHtml(item.title) + ' <span class="badge">' + item.difficulty + '</span></span>' +
+            '<span class="sr-desc">' + escapeHtml(item.description) + '</span>' +
+          '</a>';
+        }).join('');
+      }
+      results.hidden = false;
+    }
+
+    input.addEventListener('input', function () {
+      var q = input.value.trim().toLowerCase();
+      if (!q) { results.hidden = true; results.innerHTML = ''; return; }
+      var matches = index.filter(function (item) {
+        return item.title.toLowerCase().indexOf(q) !== -1 || item.description.toLowerCase().indexOf(q) !== -1;
+      });
+      render(matches, q);
+    });
+
+    input.addEventListener('focus', function () {
+      if (input.value.trim()) render(index.filter(function (item) {
+        var q = input.value.trim().toLowerCase();
+        return item.title.toLowerCase().indexOf(q) !== -1 || item.description.toLowerCase().indexOf(q) !== -1;
+      }), input.value.trim());
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { results.hidden = true; input.blur(); }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.target !== input && !results.contains(e.target)) results.hidden = true;
+    });
+  });
+`
+
 // For content meant to be embedded in an <iframe> (the frames/iframes test
-// pages) — no header/nav/footer, so it doesn't look like the whole site
+// pages): no header/nav/footer, so it doesn't look like the whole site
 // re-rendered inside a small embedded window.
 export const BareLayout: FC<PropsWithChildren<{ title: string }>> = ({ title, children }) => (
   <html lang="en">
@@ -174,20 +255,31 @@ const STYLES = `
   a:hover { text-decoration:underline; }
 
   /* Header */
-  .site-header { position:sticky; top:0; z-index:10; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+  .site-header { position:sticky; top:0; z-index:10; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   .header-inner { max-width:960px; margin:0 auto; padding:1.15rem 2rem; }
-  .brand-row { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+  .brand-row { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
   .brand { display:inline-flex; }
   .brand-mark { font-size:1.35rem; font-weight:800; letter-spacing:-0.03em; color:var(--fg); }
   .brand-mark .dot, .footer-logo .dot { color:var(--accent); }
   .footer-logo { font-family: var(--font-mono); font-size:1rem; font-weight:600; letter-spacing:-0.01em; color:var(--fg); }
-  .by-badge { display:inline-flex; align-items:center; gap:.3em; font-family: var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); border:1px solid var(--border); border-radius:999px; padding:.25rem .65rem; transition:border-color .15s, color .15s; }
+  .header-actions { display:flex; align-items:center; gap:.75rem; }
+  .by-badge { display:inline-flex; align-items:center; gap:.5em; font-family: var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); border:1px solid var(--border); border-radius:999px; padding:.35rem .9rem; transition:border-color .15s, color .15s; }
   .by-badge:hover { color:var(--accent); border-color:var(--accent); text-decoration:none; }
-  .by-badge strong { font-weight:600; }
-  .tagline { color:var(--muted); margin:.4rem 0 0; font-size:.95rem; font-weight:500; }
+  .by-badge img { display:block; }
   .site-nav { display:flex; gap:1.25rem; margin-top:.9rem; font-family:var(--font-mono); font-size:.82rem; flex-wrap:wrap; }
   .site-nav a { color:var(--muted); }
   .site-nav a:hover { color:var(--accent); text-decoration:underline; }
+
+  .site-search { position:relative; }
+  .site-search input[type="search"] { width:200px; padding:.4rem .7rem; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--fg); font-family:var(--font-sans); font-size:.85rem; }
+  .site-search input[type="search"]:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .search-results { position:absolute; top:calc(100% + .4rem); right:0; width:320px; max-width:80vw; max-height:360px; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); z-index:30; }
+  .search-results a { display:block; padding:.55rem .75rem; border-bottom:1px solid var(--border); text-decoration:none; color:var(--fg); }
+  .search-results a:last-child { border-bottom:none; }
+  .search-results a:hover { background:var(--accent-soft); }
+  .search-results .sr-title { display:flex; align-items:center; gap:.4rem; font-weight:600; font-size:.88rem; }
+  .search-results .sr-desc { display:block; color:var(--muted); font-size:.78rem; margin-top:.15rem; }
+  .search-empty { padding:.6rem .75rem; color:var(--muted); font-size:.85rem; }
 
   .site-main { padding:2.5rem 2rem 3rem; max-width:960px; margin:0 auto; }
 
@@ -219,11 +311,20 @@ const STYLES = `
   form.test-form button:hover { background:var(--accent-dark); }
   form.test-form .honeypot { position:absolute; left:-9999px; top:-9999px; }
 
+  button { padding:.65rem 1.3rem; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:.95rem; font-weight:600; font-family:inherit; transition:background .15s, opacity .15s; }
+  button:hover:not(:disabled) { background:var(--accent-dark); }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+
   ul.index-list { list-style:none; padding:0; }
   ul.index-list li { padding:.65rem 0; border-bottom:1px solid var(--border); }
   ul.index-list li:last-child { border-bottom:none; }
 
   .intro { color:var(--muted); font-size:1.02rem; max-width:64ch; }
+
+  .hero { background:var(--accent-soft); border-radius:14px; padding:2rem 2rem 1.75rem; margin-bottom:2.5rem; }
+  .hero h1 { margin:0 0 .6rem; }
+  .hero .lead { color:var(--fg); font-size:1.05rem; font-weight:600; margin:0 0 .75rem; max-width:64ch; }
+  .hero .intro { margin:0; }
 
   .page-group { margin-top:3rem; }
   .page-group:first-of-type { margin-top:2rem; }
@@ -245,6 +346,11 @@ const STYLES = `
   .steps span { padding:.3rem .75rem; border-radius:999px; border:1px solid var(--border); font-size:.82rem; font-family:var(--font-mono); }
   .steps .done { background:var(--accent); color:#fff; border-color:var(--accent); }
   .frame-embed { width:100%; height:420px; border:1px solid var(--border); border-radius:10px; }
+  .a11y-demo, .demo-box { background:#fff; color:#1a1a1a; border:1px dashed #c7cbd1; border-radius:12px; padding:1.5rem; margin-top:1.5rem; position:relative; overflow:hidden; }
+  .a11y-demo img { display:block; margin:.75rem 0; border-radius:8px; }
+  .a11y-demo form { max-width:320px; }
+  .a11y-demo input { width:100%; padding:.55rem .7rem; border:1px solid #c7cbd1; border-radius:8px; font-family:inherit; font-size:.95rem; margin:.3rem 0 .75rem; }
+  .a11y-demo label { display:block; font-weight:600; font-size:.9rem; }
   pre { font-family:var(--font-mono); background:var(--accent-soft); padding:1rem; border-radius:10px; overflow-x:auto; }
 
   .code-block { position:relative; }
@@ -277,5 +383,10 @@ const STYLES = `
 
   @media (max-width: 600px) {
     .header-inner, .site-main, .footer-inner { padding-left:1.25rem; padding-right:1.25rem; }
+    .header-actions { width:100%; justify-content:space-between; }
+    .site-search { flex:1; }
+    .site-search input[type="search"] { width:100%; }
+    .search-results { left:0; right:0; width:auto; max-width:none; }
+    .hero { padding:1.5rem 1.25rem; }
   }
 `

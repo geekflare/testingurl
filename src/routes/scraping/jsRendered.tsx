@@ -9,7 +9,7 @@ jsRendered.get('/scraping/js-rendered', (c) => {
     <Layout title="JS-rendered content">
       <h1>JS-rendered content</h1>
       <p>
-        The HTML response for this page contains no product data at all — open "view source" to confirm. Content is
+        The HTML response for this page contains no product data at all; open "view source" to confirm. Content is
         fetched from <code>GET /scraping/js-rendered/api</code> and injected by client-side JavaScript after load.
         A scraper that doesn't execute JS (or wait for it) will see an empty <code>#app</code>.
       </p>

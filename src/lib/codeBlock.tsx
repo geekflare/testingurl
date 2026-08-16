@@ -1,7 +1,7 @@
 import type { FC } from 'hono/jsx'
 
 // A shared, site-wide click handler (registered once in Layout) reads
-// whatever text is currently inside `pre code` at click time — so this
+// whatever text is currently inside `pre code` at click time, so this
 // works identically for static docs examples and for the generator pages'
 // dynamically-populated preview panels, with no per-instance script.
 export const CodeBlock: FC<{ content?: string; filename?: string; codeId?: string }> = ({

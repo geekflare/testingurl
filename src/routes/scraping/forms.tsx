@@ -13,7 +13,7 @@ forms.get('/scraping/forms/basic', (c) => {
   return c.html(
     <Layout title="Basic GET form">
       <h1>Basic GET form</h1>
-      <p>Search submits via GET — results are driven entirely by the URL, e.g. <code>?q=pro</code>.</p>
+      <p>Search submits via GET, so results are driven entirely by the URL, e.g. <code>?q=pro</code>.</p>
       <form class="test-form" method="get" action="/scraping/forms/basic">
         <label for="q">Search products</label>
         <input type="text" id="q" name="q" value={q} placeholder="e.g. pro" />
@@ -222,7 +222,7 @@ forms.get('/scraping/forms/hidden-fields', (c) => {
       <h1>Hidden &amp; honeypot fields</h1>
       <p>
         This form includes a hidden CSRF token (must be echoed back exactly) and a honeypot field named{' '}
-        <code>website</code> that must be submitted empty — real users never see or fill it in.
+        <code>website</code> that must be submitted empty. Real users never see or fill it in.
       </p>
       <form class="test-form" method="post" action="/scraping/forms/hidden-fields">
         <input type="hidden" name="csrf_token" value={CSRF_TOKEN} />

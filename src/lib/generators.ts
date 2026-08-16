@@ -1,5 +1,5 @@
 // Unlike the deterministic Mock Data fixtures, everything in this module is
-// intentionally randomized — a "generator" is supposed to give you fresh
+// intentionally randomized: a "generator" is supposed to give you fresh
 // values every time you ask.
 
 const FIRST_NAMES = [
@@ -117,7 +117,7 @@ export interface GeneratedCard {
   cvv: string
 }
 
-// Synthetic, Luhn-valid test numbers — for exercising a form's card-format
+// Synthetic, Luhn-valid test numbers for exercising a form's card-format
 // and checksum validation, nothing else. Not tied to any real BIN/issuer
 // lookup, and cannot be charged.
 export function generateCard(networkKey?: string): GeneratedCard {
@@ -174,7 +174,7 @@ export function generateFileContent(type: 'txt' | 'csv' | 'json' | 'bin', target
     out = out.slice(0, targetBytes)
   } else {
     // json: build an array, stopping once the next item would exceed the
-    // target — slicing a finished JSON string would produce invalid JSON.
+    // target. Slicing a finished JSON string would produce invalid JSON.
     const items: GeneratedUser[] = []
     out = '[]'
     while (true) {

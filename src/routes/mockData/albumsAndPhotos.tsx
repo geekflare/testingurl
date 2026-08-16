@@ -55,13 +55,13 @@ albumsAndPhotos.on(['PUT', 'PATCH'], '/mock-data/albums/:id{[0-9]+}', async (c) 
   const album = findAlbum(parseInt(c.req.param('id'), 10))
   if (!album) return c.json({ error: 'Album not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...album, ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...album, ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 albumsAndPhotos.delete('/mock-data/albums/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   if (!findAlbum(id)) return c.json({ error: 'Album not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 // --- Photos ------------------------------------------------------------------
@@ -116,13 +116,13 @@ albumsAndPhotos.on(['PUT', 'PATCH'], '/mock-data/photos/:id{[0-9]+}', async (c) 
   const photo = findPhoto(parseInt(c.req.param('id'), 10))
   if (!photo) return c.json({ error: 'Photo not found' }, 404)
   const body = await c.req.json().catch(() => ({}))
-  return c.json({ ...serializePhoto(photo, requestOrigin(c)), ...body, note: 'Not persisted — changes are not saved.' })
+  return c.json({ ...serializePhoto(photo, requestOrigin(c)), ...body, note: 'Not persisted. Changes are not saved.' })
 })
 
 albumsAndPhotos.delete('/mock-data/photos/:id{[0-9]+}', (c) => {
   const id = parseInt(c.req.param('id'), 10)
   if (!findPhoto(id)) return c.json({ error: 'Photo not found' }, 404)
-  return c.json({ deleted: true, id, note: 'Not persisted — nothing was actually deleted.' })
+  return c.json({ deleted: true, id, note: 'Not persisted. Nothing was actually deleted.' })
 })
 
 // --- Docs ------------------------------------------------------------------
@@ -132,7 +132,7 @@ albumsAndPhotos.get('/mock-data/albums/docs', (c) => {
   return c.html(
     <Layout
       title="Albums & Photos API reference"
-      description="A fake CRUD REST API for albums and their nested photos — list, fetch, create, update, and delete. Nothing is persisted between requests."
+      description="A fake CRUD REST API for albums and their nested photos: list, fetch, create, update, and delete. Nothing is persisted between requests."
     >
       <p class="crumb">
         <a href="/mock-data">&laquo; Mock Data</a>
@@ -140,7 +140,7 @@ albumsAndPhotos.get('/mock-data/albums/docs', (c) => {
       <h1>Albums &amp; Photos API</h1>
       <p class="intro">
         {MOCK_ALBUMS.length} albums, each owned by a user (<code>userId</code>), with {MOCK_PHOTOS.length} photos
-        spread across them. Each photo has a real, self-hosted <code>url</code>/<code>thumbnailUrl</code> — a
+        spread across them. Each photo has a real, self-hosted <code>url</code>/<code>thumbnailUrl</code>: a
         generated SVG, not a hotlinked external image.
       </p>
 

@@ -8,15 +8,15 @@ contact.get('/contact', (c) => {
   return c.html(
     <Layout
       title="Contact"
-      description="Contact details — email, phone, and address — as plain text, mailto:/tel: links, Microdata, and Organization JSON-LD, for testing contact-data extraction."
+      description="Contact details (email, phone, and address) as plain text, mailto:/tel: links, Microdata, and Organization JSON-LD, for testing contact-data extraction."
     >
       <p class="crumb">
         <a href="/scraping/structured-data">&laquo; Structured data</a>
       </p>
       <h1>Contact</h1>
       <p class="intro">
-        The details below are marked up two ways at once — schema.org Microdata on the visible elements, and an{' '}
-        <code>Organization</code> JSON-LD block in the page source — a realistic target for contact-data
+        The details below are marked up two ways at once: schema.org Microdata on the visible elements, and an{' '}
+        <code>Organization</code> JSON-LD block in the page source. A realistic target for contact-data
         extraction (email/phone/address scrapers).
       </p>
 

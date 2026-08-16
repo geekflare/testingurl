@@ -22,7 +22,7 @@ generatorCards.get('/generator/cards/api', (c) => {
   const cards = Array.from({ length: count }, () => generateCard(network))
 
   if (format === 'csv') {
-    c.header('Content-Type', 'text/csv')
+    c.header('Content-Type', 'text/csv; charset=utf-8')
     c.header('Content-Disposition', 'attachment; filename="generated-test-cards.csv"')
     return c.body(toCsv(cards))
   }
@@ -33,7 +33,7 @@ generatorCards.get('/generator/cards', (c) => {
   return c.html(
     <Layout
       title="Card Generator"
-      description="Generate synthetic, Luhn-valid test credit card numbers for testing payment-form validation. Not linked to any real account, bank, or network — cannot be charged."
+      description="Generate synthetic, Luhn-valid test credit card numbers for testing payment-form validation. Not linked to any real account, bank, or network, and cannot be charged."
     >
       <p class="crumb">
         <a href="/generator">&laquo; Generators</a>
@@ -45,7 +45,7 @@ generatorCards.get('/generator/cards', (c) => {
       </p>
       <p>
         <strong>These are not real cards.</strong> Numbers are generated locally from public network prefix
-        patterns — they aren't looked up against any real bank or card network, aren't linked to any account, and
+        patterns. They aren't looked up against any real bank or card network, aren't linked to any account, and
         cannot be used to make a purchase.
       </p>
 

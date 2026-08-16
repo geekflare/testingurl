@@ -18,14 +18,14 @@ ecommerce.get('/scraping/ecommerce', (c) => {
   return c.html(
     <Layout
       title="Ecommerce catalog"
-      description="A fake ecommerce store — practice scraping category listings and product detail pages, the classic web-scraping test target."
+      description="A fake ecommerce store for practicing scraping category listings and product detail pages, the classic web-scraping test target."
     >
       <p class="crumb">
         <a href="/scraping">&laquo; Web Scraping</a>
       </p>
       <h1>Ecommerce catalog</h1>
       <p class="intro">
-        A small fake online store — browse by category down to individual product pages. This mirrors real
+        A small fake online store you can browse by category down to individual product pages. This mirrors real
         ecommerce sites (category → product grid → product detail), a common target for scraping practice.
       </p>
       <div class="grid">
@@ -52,7 +52,7 @@ ecommerce.get('/scraping/ecommerce/category/:key', (c) => {
   return c.html(
     <Layout
       title={category.label}
-      description={`Browse ${category.label.toLowerCase()} in the fake ecommerce catalog — every product links to its own detail page.`}
+      description={`Browse ${category.label.toLowerCase()} in the fake ecommerce catalog. Every product links to its own detail page.`}
     >
       <p class="crumb">
         <a href="/scraping/ecommerce">&laquo; Ecommerce catalog</a>
@@ -82,7 +82,7 @@ ecommerce.get('/scraping/ecommerce/product/:id{[0-9]+}', (c) => {
   const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
 
   return c.html(
-    <Layout title={product.name} description={`${product.name} — $${product.price.toFixed(2)}. ${product.description}`}>
+    <Layout title={product.name} description={`${product.name}: $${product.price.toFixed(2)}. ${product.description}`}>
       <p class="crumb">
         <a href="/scraping/ecommerce">Ecommerce catalog</a> /{' '}
         <a href={`/scraping/ecommerce/category/${product.category}`}>{category?.label}</a>

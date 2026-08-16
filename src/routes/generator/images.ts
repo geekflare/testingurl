@@ -5,7 +5,7 @@ export const generatorImages = new Hono()
 const DIMENSION_MAX = 4000
 const COLORS = ['#2563eb', '#dc2626', '#059669', '#d97706', '#7c3aed', '#db2777', '#0891b2', '#65a30d']
 
-// Deterministic per width/height — the same URL always returns the same
+// Deterministic per width/height: the same URL always returns the same
 // image, so it's a stable test asset rather than a fresh-every-time
 // generator, even though it lives alongside the others for discoverability.
 generatorImages.get('/generator/images/:width{[0-9]+}/:height{[0-9]+}', (c) => {

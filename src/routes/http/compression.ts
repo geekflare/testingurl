@@ -10,7 +10,7 @@ export const httpCompression = new Hono()
 // to see real edge compression in action.
 httpCompression.get('/http/gzip', (c) => {
   return c.json({
-    note: 'This response is compressed transparently by the edge/CDN when your client sends Accept-Encoding: gzip — check the Content-Encoding response header.',
+    note: 'This response is compressed transparently by the edge/CDN when your client sends Accept-Encoding: gzip. Check the Content-Encoding response header.',
     padding: 'x'.repeat(2000),
   })
 })

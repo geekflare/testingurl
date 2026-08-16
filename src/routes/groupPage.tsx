@@ -24,10 +24,11 @@ function renderGroup(groupKey: string) {
   }
 }
 
-// One explicit route per manifest group — keeps this file the single place
+// One explicit route per manifest group. Keeps this file the single place
 // that has to change if a group's key ever changes, and avoids a wildcard
 // route that could shadow literal paths like /robots.txt.
 groupPages.get('/scraping', renderGroup('scraping'))
 groupPages.get('/http', renderGroup('http'))
 groupPages.get('/mock-data', renderGroup('mock-data'))
 groupPages.get('/generator', renderGroup('generator'))
+groupPages.get('/ai', renderGroup('ai'))

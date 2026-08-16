@@ -10,17 +10,17 @@ frames.get('/scraping/frames', (c) => {
   return c.html(
     <Layout
       title="Frames & iFrames"
-      description="Content nested inside an iframe pointing at a separate URL — two levels deep. Find the real page and fetch it directly."
+      description="Content nested inside an iframe pointing at a separate URL, two levels deep. Find the real page and fetch it directly."
     >
       <p class="crumb">
         <a href="/scraping">&laquo; Web Scraping</a>
       </p>
       <h1>Frames &amp; iFrames</h1>
       <p class="intro">
-        The list below isn't in this document at all — it's a separate page loaded inside an{' '}
-        <code>&lt;iframe&gt;</code>. View source on this page and you won't find a single item; you'll need to find
+        The list below isn't in this document at all. It's a separate page loaded inside an{' '}
+        <code>&lt;iframe&gt;</code>. View source on this page and you won't find a single item: you'll need to find
         the iframe's <code>src</code> attribute and fetch that URL directly. Each item then leads to another page
-        that does the exact same thing one level deeper — turtles all the way down.
+        that does the exact same thing one level deeper. Turtles all the way down.
       </p>
       <iframe src="/scraping/frames/list" title="Framed item list" class="frame-embed"></iframe>
     </Layout>
@@ -31,7 +31,7 @@ frames.get('/scraping/frames/list', (c) => {
   return c.html(
     <BareLayout title="Framed item list">
       <p>
-        This page lives at <code>/scraping/frames/list</code> — a different URL from the page that embeds it.
+        This page lives at <code>/scraping/frames/list</code>, a different URL from the page that embeds it.
       </p>
       <ul class="index-list">
         {FRAME_ITEMS.map((p) => (
@@ -57,7 +57,7 @@ frames.get('/scraping/frames/item/:id{[0-9]+}', (c) => {
       </p>
       <h1>{product.name}</h1>
       <p class="intro">
-        Same trick again — the actual product details are in another iframe at{' '}
+        Same trick again: the actual product details are in another iframe at{' '}
         <code>/scraping/frames/item/{id}/detail</code>, not in this document.
       </p>
       <iframe src={`/scraping/frames/item/${id}/detail`} title={`${product.name} detail`} class="frame-embed"></iframe>
