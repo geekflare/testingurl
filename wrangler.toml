@@ -1,0 +1,15 @@
+name = "testingurl"
+main = "src/index.tsx"
+compatibility_date = "2026-08-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Custom domain (testingurl.dev) is attached via the Cloudflare dashboard
+# (Workers & Pages -> testingurl -> Triggers -> Custom Domains) or with:
+#   wrangler deploy --routes testingurl.dev/*
+
+# Used by /http/rate-limit and the cookie-based auth/multi-step-form demos.
+# Create it once with `wrangler kv namespace create TESTINGURL_KV`
+# and paste the returned id below before deploying.
+[[kv_namespaces]]
+binding = "TESTINGURL_KV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
