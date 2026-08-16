@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import type { Env } from './lib/env'
 import { cachingMiddleware } from './lib/caching'
+import { canonicalMiddleware } from './lib/canonical'
 import { Layout } from './lib/layout'
 import { MANIFEST } from './lib/manifest'
 import { OPENAPI_SPEC } from './lib/openapi'
@@ -55,6 +56,7 @@ import { pdfDocuments } from './routes/ai/pdfDocuments'
 const app = new Hono<{ Bindings: Env }>()
 
 app.use('*', cachingMiddleware)
+app.use('*', canonicalMiddleware)
 
 app.route('/', home)
 app.route('/', groupPages)

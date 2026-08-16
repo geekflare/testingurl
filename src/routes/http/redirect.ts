@@ -12,9 +12,7 @@ httpRedirect.get('/http/redirect/:n{[0-9]+}', (c) => {
 
 const ALLOWED_REDIRECT_PROTOCOLS = ['http:', 'https:']
 
-// Redirects to any absolute http(s) URL the caller supplies, for testing
-// that an HTTP client follows/limits redirects to arbitrary hosts, same as
-// httpbin.org/redirect-to. Restricted to http(s) to rule out javascript:/data:.
+
 httpRedirect.get('/http/redirect-to', (c) => {
   const url = c.req.query('url')
   const statusCode = parseInt(c.req.query('status_code') ?? '302', 10)

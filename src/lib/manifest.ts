@@ -209,7 +209,7 @@ export const MANIFEST: GroupEntry[] = [
   {
     key: 'http',
     label: 'HTTP & Networking',
-    description: 'httpbin-style endpoints for testing HTTP clients, status codes, and headers directly.',
+    description: 'Endpoints for testing HTTP clients, status codes, and headers directly.',
     categories: [
       {
         key: 'http-status',

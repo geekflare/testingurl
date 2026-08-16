@@ -23,8 +23,7 @@ httpCaching.get('/http/cache', (c) => {
   return c.json({ cached: false, lastModified: FIXED_LAST_MODIFIED, etag: FIXED_ETAG })
 })
 
-// Matches httpbin's /etag/{etag}: send the same value back via
-// If-None-Match to get a 304.
+
 httpCaching.get('/http/etag/:etag', (c) => {
   const etag = c.req.param('etag')
   const quoted = `"${etag}"`

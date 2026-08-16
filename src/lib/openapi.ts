@@ -30,7 +30,7 @@ export const OPENAPI_SPEC = {
   info: {
     title: 'TestingURL.dev API',
     description:
-      'Every JSON endpoint on testingurl.dev: deterministic Mock Data fixtures, httpbin-style HTTP & Networking endpoints, and non-deterministic Generators. No authentication required anywhere except the endpoints that are specifically testing authentication.',
+      'Every JSON endpoint on testingurl.dev: deterministic Mock Data fixtures, HTTP & Networking endpoints, and non-deterministic Generators. No authentication required anywhere except the endpoints that are specifically testing authentication.',
     version: '1.0.0',
     contact: { url: 'https://testingurl.dev/contact' },
     license: { name: 'MIT' },
