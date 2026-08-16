@@ -3,3 +3,7 @@ node_modules/
 dist/
 .dev.vars
 *.log
+
+# Build output of `npm run generate:og-image` — the served copy is the
+# base64 embed in src/routes/assets.tsx, this file is just the regen output.
+/og-image.png

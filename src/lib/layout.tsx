@@ -3,6 +3,10 @@ import { MANIFEST, SEARCH_INDEX } from './manifest'
 
 const SEARCH_INDEX_JSON = JSON.stringify(SEARCH_INDEX)
 
+const SITE_DESCRIPTION =
+  'A free sandbox for web scraping, HTTP testing, and AI agent test fixtures.'
+const OG_IMAGE_URL = 'https://testingurl.dev/og-image.png'
+
 const GeekflareLogo: FC<{ height: number }> = ({ height }) => (
   <picture>
     <source srcset="https://cdn.geekflare.com/general/logo-dark.svg" media="(prefers-color-scheme: dark)" />
@@ -24,6 +28,17 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title} · TestingURL.dev</title>
         {description && <meta name="description" content={description} />}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="TestingURL.dev" />
+        <meta property="og:title" content={`${title} · TestingURL.dev`} />
+        <meta property="og:description" content={description ?? SITE_DESCRIPTION} />
+        <meta property="og:image" content={OG_IMAGE_URL} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${title} · TestingURL.dev`} />
+        <meta name="twitter:description" content={description ?? SITE_DESCRIPTION} />
+        <meta name="twitter:image" content={OG_IMAGE_URL} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
