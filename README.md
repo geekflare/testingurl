@@ -48,17 +48,6 @@ validated [OpenAPI 3.0 spec](https://testingurl.dev/openapi.json).
 - [Hono](https://hono.dev) (TypeScript)
 - Server-rendered HTML via `hono/jsx`
 
-## Caching
-
-Deterministic pages are cached at Cloudflare's edge via the Workers Cache
-API, so a repeat request to the same URL is served without re-running the
-handler. Every response carries an `X-Cache: HIT`/`MISS` header so you can
-see it working. Pages that are stateful, request-specific, or deliberately
-non-deterministic by design (rate limiting, delays, request-echoing
-endpoints, session-cookie pages, the generators) are excluded and always
-carry `Cache-Control: no-store`. The full allow/deny logic lives in
-[`src/lib/caching.ts`](src/lib/caching.ts).
-
 ## Local development
 
 ```bash
