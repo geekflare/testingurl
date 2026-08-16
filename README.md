@@ -37,7 +37,7 @@ validated [OpenAPI 3.0 spec](https://testingurl.dev/openapi.json).
   JSON-LD, for testing contact-data extraction
 - **`/ai`** — fixtures for people building AI agents and RAG pipelines. A
   prompt-injection test page has seven labeled hidden-text vectors plus a
-  benign canary phrase. A 15-article retrieval corpus (HTML + Markdown + PDF +
+  benign canary phrase. A retrieval corpus (HTML + Markdown + PDF +
   bulk JSON, plus a single dataset.json bundle) comes with a documented query
   → expected-result answer key. There are also dedicated PDF documents built
   to stress-test extraction: a real table, a two-column layout, and repeated

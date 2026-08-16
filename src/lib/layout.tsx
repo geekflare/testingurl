@@ -36,6 +36,7 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
         <script dangerouslySetInnerHTML={{ __html: CODE_BLOCK_SCRIPT }} />
         <script id="search-index-data" type="application/json" dangerouslySetInnerHTML={{ __html: SEARCH_INDEX_JSON }} />
         <script dangerouslySetInnerHTML={{ __html: SEARCH_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: HEADER_SCRIPT }} />
       </head>
       <body>
         <header class="site-header">
@@ -47,7 +48,13 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
                 </span>
               </a>
               <div class="header-actions">
-                <div class="site-search">
+                <div class="site-search" id="site-search">
+                  <button type="button" class="search-toggle" id="search-toggle" aria-label="Search">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <circle cx="11" cy="11" r="7" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                  </button>
                   <input
                     type="search"
                     id="site-search-input"
@@ -58,11 +65,22 @@ export const Layout: FC<PropsWithChildren<{ title: string; description?: string;
                   <div id="site-search-results" class="search-results" role="listbox" hidden></div>
                 </div>
                 <a href="https://geekflare.com" class="by-badge" rel="noopener noreferrer" target="_blank">
-                  by <GeekflareLogo height={19} />
+                  <span class="by-text">by</span> <GeekflareLogo height={19} />
                 </a>
+                <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-nav">
+                  <svg class="icon-menu" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="17" y2="12" />
+                    <line x1="3" y1="18" x2="13" y2="18" />
+                  </svg>
+                  <svg class="icon-close" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                  </svg>
+                </button>
               </div>
             </div>
-            <nav class="site-nav">
+            <nav class="site-nav" id="site-nav">
               <a href="/">All pages</a>
               {MANIFEST.map((group) => (
                 <a href={`/${group.key}`}>{group.label}</a>
@@ -223,6 +241,65 @@ const SEARCH_SCRIPT = `
   });
 `
 
+// Mobile-only chrome: collapses the nav behind a hamburger button and the
+// search input behind an icon, both restored to their normal always-visible
+// state above the 600px breakpoint by CSS alone (these listeners are simply
+// no-ops there, since nothing ever adds the "open" class).
+const HEADER_SCRIPT = `
+  document.addEventListener('DOMContentLoaded', function () {
+    var navToggle = document.getElementById('nav-toggle');
+    var nav = document.getElementById('site-nav');
+
+    function setNavOpen(open) {
+      nav.classList.toggle('open', open);
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    if (navToggle && nav) {
+      navToggle.addEventListener('click', function () {
+        setNavOpen(!nav.classList.contains('open'));
+      });
+    }
+
+    var searchToggle = document.getElementById('search-toggle');
+    var searchWrap = document.getElementById('site-search');
+    var searchInput = document.getElementById('site-search-input');
+
+    function setSearchOpen(open) {
+      searchWrap.classList.toggle('open', open);
+      if (open) {
+        searchInput.focus();
+      } else {
+        searchInput.value = '';
+        var results = document.getElementById('site-search-results');
+        if (results) { results.hidden = true; results.innerHTML = ''; }
+      }
+    }
+
+    if (searchToggle && searchWrap && searchInput) {
+      searchToggle.addEventListener('click', function () {
+        setSearchOpen(!searchWrap.classList.contains('open'));
+      });
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && searchWrap.classList.contains('open')) {
+          setSearchOpen(false);
+          searchToggle.focus();
+        }
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (nav && nav.classList.contains('open') && !nav.contains(e.target) && !navToggle.contains(e.target)) {
+        setNavOpen(false);
+      }
+      if (searchWrap && searchWrap.classList.contains('open') && !searchWrap.contains(e.target)) {
+        setSearchOpen(false);
+      }
+    });
+  });
+`
+
 // For content meant to be embedded in an <iframe> (the frames/iframes test
 // pages): no header/nav/footer, so it doesn't look like the whole site
 // re-rendered inside a small embedded window.
@@ -275,7 +352,13 @@ const STYLES = `
   .site-nav a { color:var(--muted); }
   .site-nav a:hover { color:var(--accent); text-decoration:underline; }
 
-  .site-search { position:relative; }
+  .nav-toggle, .search-toggle { display:none; align-items:center; justify-content:center; width:34px; height:34px; padding:0; flex-shrink:0; border:none; border-radius:8px; background:transparent; color:var(--fg); cursor:pointer; }
+  button.nav-toggle:hover, button.search-toggle:hover { color:var(--accent); background:transparent; }
+  .nav-toggle .icon-close { display:none; }
+  .nav-toggle.open .icon-menu { display:none; }
+  .nav-toggle.open .icon-close { display:block; }
+
+  .site-search { position:relative; display:flex; align-items:center; gap:.4rem; }
   .site-search input[type="search"] { width:200px; padding:.4rem .7rem; border:1px solid var(--border); border-radius:8px; background:var(--surface); color:var(--fg); font-family:var(--font-sans); font-size:.85rem; }
   .site-search input[type="search"]:focus { outline:2px solid var(--accent); outline-offset:1px; }
   .search-results { position:absolute; top:calc(100% + .4rem); right:0; width:320px; max-width:80vw; max-height:360px; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); z-index:30; }
@@ -389,10 +472,23 @@ const STYLES = `
 
   @media (max-width: 600px) {
     .header-inner, .site-main, .footer-inner { padding-left:1.25rem; padding-right:1.25rem; }
-    .header-actions { width:100%; justify-content:space-between; }
-    .site-search { flex:1; }
-    .site-search input[type="search"] { width:100%; }
+    .header-actions { gap:.5rem; }
+    .by-badge { display:none; }
+    .nav-toggle, .search-toggle { display:inline-flex; }
+
+    .site-search input[type="search"] { display:none; }
+    .site-search.open {
+      position:fixed; top:0; left:0; right:0;
+      padding:.9rem 1.25rem; background:var(--bg); border-bottom:1px solid var(--border); z-index:50;
+    }
+    .site-search.open input[type="search"] { display:block; flex:1; width:auto; }
     .search-results { left:0; right:0; width:auto; max-width:none; }
+
+    .site-nav { display:none; width:100%; flex-direction:column; gap:0; margin-top:.75rem; }
+    .site-nav.open { display:flex; }
+    .site-nav a { padding:.65rem 0; border-bottom:1px solid var(--border); }
+    .site-nav a:last-child { border-bottom:none; }
+
     .hero { padding:1.5rem 1.25rem; }
   }
 `
